@@ -1,6 +1,8 @@
 import express, { Response, Request } from "express"
 import { createServer } from "http"
-import { Server } from "socket.io"
+import { Server, Socket } from "socket.io"
+import datjs from "dayjs"
+import "dayjs/locale/th"
 
 const app = express()
 const httpServer = createServer(app)
@@ -9,13 +11,15 @@ const io = new Server(httpServer, {
 })
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("🙏")
+  const day = datjs().locale("th").format("DD/MMMM/YYYY HH:MM")
+  res.send(`🙏 : ${day}`)
 })
 
-io.on("connection", (socket) => {
+io.on("connection", (socket: Socket) => {
   // ...
 })
 
 httpServer.listen(2000, () => {
-  console.log("🎉 Server is up.")
+  const day = datjs().locale("th").format("DD/MMMM/YYYY HH:MM:ss")
+  console.log("🎉 Server is up. :", day)
 })
