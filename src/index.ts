@@ -1,4 +1,5 @@
 import express, { Response, Request } from "express"
+import cors from "cors"
 import { createServer } from "http"
 import { Server, Socket } from "socket.io"
 import dayjs from "dayjs"
@@ -10,10 +11,16 @@ dayjs.extend(utc)
 dayjs.extend(timezome)
 
 const app = express()
+
 const httpServer = createServer(app)
 const io = new Server(httpServer, {
-  /* options */
+  cors: {
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST"]
+  }
 })
+
+app.use(cors())
 
 app.get("/", (req: Request, res: Response) => {
   const day = dayjs()
@@ -25,7 +32,7 @@ app.get("/", (req: Request, res: Response) => {
 
 io.on("connection", (socket: Socket) => {
   // ...
-  console.log("😊 Use conenct")
+  console.log("😊 Use conenct :", socket.id)
 })
 
 httpServer.listen(2000, () => {
